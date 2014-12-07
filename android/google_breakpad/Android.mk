@@ -77,6 +77,9 @@ LOCAL_SRC_FILES := \
     src/client/linux/minidump_writer/linux_dumper.cc \
     src/client/linux/minidump_writer/linux_ptrace_dumper.cc \
     src/client/linux/minidump_writer/minidump_writer.cc \
+    src/client/linux/dump_writer_common/ucontext_reader.cc \
+    src/client/linux/dump_writer_common/seccomp_unwinder.cc \
+    src/client/linux/dump_writer_common/thread_info.cc \
     src/client/minidump_file_writer.cc \
     src/common/android/breakpad_getcontext.S \
     src/common/convert_UTF.c \
@@ -91,9 +94,10 @@ LOCAL_SRC_FILES := \
 
 LOCAL_C_INCLUDES        := $(LOCAL_PATH)/src/common/android/include \
                            $(LOCAL_PATH)/src
+LOCAL_LDLIBS := -llog
 
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_C_INCLUDES)
-LOCAL_EXPORT_LDLIBS     := -llog
+LOCAL_EXPORT_LDLIBS     := $(LOCAL_LDLIBS)
 
 include $(BUILD_STATIC_LIBRARY)
 

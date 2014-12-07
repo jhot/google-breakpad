@@ -551,10 +551,12 @@ void ExceptionHandler::WaitForContinueSignal() {
 bool ExceptionHandler::DoDump(pid_t crashing_process, const void* context,
                               size_t context_size) {
   if (minidump_descriptor_.IsMicrodumpOnConsole()) {
+  /*
     return google_breakpad::WriteMicrodump(crashing_process,
                                            context,
                                            context_size,
                                            mapping_list_);
+  */
   }
   if (minidump_descriptor_.IsFD()) {
     return google_breakpad::WriteMinidump(minidump_descriptor_.fd(),
