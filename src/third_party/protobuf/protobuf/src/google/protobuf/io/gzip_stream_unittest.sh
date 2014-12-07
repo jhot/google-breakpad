@@ -1,4 +1,8 @@
-# Copyright 2014 Google Inc. All rights reserved.
+#!/bin/sh -x
+#
+# Protocol Buffers - Google's data interchange format
+# Copyright 2009 Google Inc.  All rights reserved.
+# http://code.google.com/p/protobuf/
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,23 +29,16 @@
 # THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Author: brianolson@google.com (Brian Olson)
+#
+# Test compatibility between command line gzip/gunzip binaries and
+# ZeroCopyStream versions.
 
-# Ignore GYP generated Visual Studio artifacts.
-*.filters
-*.sdf
-*.sln
-*.suo
-*.vcproj
-*.vcxproj
+TESTFILE=Makefile
 
-# Ignore compiled Python files.
-*.pyc
+(./zcgzip < ${TESTFILE} | gunzip | cmp - ${TESTFILE}) && \
+(gzip < ${TESTFILE} | ./zcgunzip | cmp - ${TESTFILE})
 
-# Ignore directories gclient syncs.
-src/testing
-# src/third_party/glog
-# src/third_party/lss
-# src/third_party/protobuf
-src/tools/gyp
-
-*.svn
+# Result of "(cmd) && (cmd)" implicitly becomes result of this script
+# and thus the test.

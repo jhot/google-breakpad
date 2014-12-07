@@ -1,4 +1,7 @@
-# Copyright 2014 Google Inc. All rights reserved.
+#!/usr/bin/env python
+#
+# Copyright 2008, Google Inc.
+# All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -26,22 +29,42 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Ignore GYP generated Visual Studio artifacts.
-*.filters
-*.sdf
-*.sln
-*.suo
-*.vcproj
-*.vcxproj
+"""Verifies that Google Test warns the user when not initialized properly."""
 
-# Ignore compiled Python files.
-*.pyc
+__author__ = 'wan@google.com (Zhanyong Wan)'
 
-# Ignore directories gclient syncs.
-src/testing
-# src/third_party/glog
-# src/third_party/lss
-# src/third_party/protobuf
-src/tools/gyp
+import gtest_test_utils
 
-*.svn
+
+COMMAND = gtest_test_utils.GetTestExecutablePath('gtest_uninitialized_test_')
+
+
+def Assert(condition):
+  if not condition:
+    raise AssertionError
+
+
+def AssertEq(expected, actual):
+  if expected != actual:
+    print 'Expected: %s' % (expected,)
+    print '  Actual: %s' % (actual,)
+    raise AssertionError
+
+
+def TestExitCodeAndOutput(command):
+  """Runs the given command and verifies its exit code and output."""
+
+  # Verifies that 'command' exits with code 1.
+  p = gtest_test_utils.Subprocess(command)
+  Assert(p.exited)
+  AssertEq(1, p.exit_code)
+  Assert('InitGoogleTest' in p.output)
+
+
+class GTestUninitializedTest(gtest_test_utils.TestCase):
+  def testExitCodeAndOutput(self):
+    TestExitCodeAndOutput(COMMAND)
+
+
+if __name__ == '__main__':
+  gtest_test_utils.Main()
